@@ -5,7 +5,7 @@
 #include <list>
 
 #define BUCKETS 10
-void bucketSort(std::vector<float>& arr, float max, float min)
+void bucketSort(std::vector<float>& arr, float max, float min, int &MaxCollisions)
 {
     std::vector<std::list<float>> result;
     result.resize(BUCKETS);
@@ -15,8 +15,11 @@ void bucketSort(std::vector<float>& arr, float max, float min)
         j = floor(arr[i] / divider);
         result[j].push_back( arr[i]);
     }
-    for (int i = 0; i < BUCKETS; i++)
+    for (int i = 0; i < BUCKETS; i++) {
         result[i].sort();
+        if (MaxCollisions < result[i].size())
+            MaxCollisions = result[i].size();
+    }
     int counter = 0;
     for (int i = 0; i < BUCKETS; i++){
         for (float n: result[i]) {
@@ -33,6 +36,7 @@ int main() {
     int NumSize = 0;
     float max = 0;
     float min = 100;
+    int MaxCollisions = 0;
     std::vector<float> Numbers;
     std::string current = "";
     while (str[counter] != '\0') {
@@ -62,9 +66,11 @@ int main() {
     }
     Numbers.push_back(std::stoi(current));
     current = "";
-    bucketSort(Numbers,max,min);
+    bucketSort(Numbers,max,min,MaxCollisions);
     for (int i = 0; i < Numbers.size(); i++)
         std::cout << Numbers[i] << " ";
+    std::cout << std::endl;
+    std::cout << MaxCollisions;
     return 0;
 }
 
